@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard - PinjamYuk</title>
+    <title>Edit Barang - PinjamYuk</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -76,6 +76,11 @@
             padding-bottom: 15px;
             border-bottom: 1px solid #eee;
             margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .card {
@@ -83,12 +88,7 @@
             border: none;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 25px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
         }
         
         .card-header {
@@ -99,28 +99,36 @@
             border-radius: 10px 10px 0 0 !important;
         }
         
-        .card-body {
-            padding: 20px;
-        }
-        
-        .stat-card {
-            text-align: center;
-            padding: 20px;
-        }
-        
-        .stat-card i {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
-        
-        .stat-card .number {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-        
         .btn-primary {
             background-color: var(--secondary);
             border-color: var(--secondary);
+        }
+        
+        .btn-outline-secondary {
+            border-color: #95a5a6;
+            color: #7f8c8d;
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: #ecf0f1;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        
+        .form-control, .form-select, .form-control:focus {
+            border-radius: 8px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            box-shadow: none;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
         }
         
         /* Responsive styles */
@@ -161,22 +169,16 @@
         }
         
         .container-main {
-            max-width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
             padding: 0 15px;
         }
         
-        .row-cards {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 0 -10px;
-        }
-        
-        .row-cards > [class*="col-"] {
-            padding: 0 10px;
-        }
-        
-        .card-body p {
-            margin-bottom: 0;
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
         }
     </style>
 </head>
@@ -193,12 +195,12 @@
         </div>
         <ul class="nav flex-column mt-4">
             <li class="nav-item">
-                <a class="nav-link active" href="<?= site_url('dashboard') ?>">
+                <a class="nav-link" href="<?= site_url('dashboard') ?>">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?= site_url('barang') ?>">
+                <a class="nav-link active" href="<?= site_url('barang') ?>">
                     <i class="fas fa-box-open"></i> Barang
                 </a>
             </li>
@@ -219,53 +221,46 @@
     <main class="main-content">
         <div class="container-main">
             <div class="page-header">
-                <h1 class="h2"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h1>
+                <h1 class="h2"><i class="fas fa-edit me-2"></i>Edit Barang</h1>
+                <a href="<?= site_url('barang') ?>" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Kembali
+                </a>
             </div>
             
-            <div class="row row-cards">
-                <div class="col-md-4 mb-4">
-                    <div class="card border-primary">
-                        <div class="card-body stat-card text-primary">
-                            <i class="fas fa-boxes"></i>
-                            <div class="number"><?= $total_barang ?></div>
-                            <p>Total Barang Tersedia</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card border-success">
-                        <div class="card-body stat-card text-success">
-                            <i class="fas fa-users"></i>
-                            <div class="number"><?= $total_pengguna ?></div>
-                            <p>Pengguna Aktif</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card border-info">
-                        <div class="card-body stat-card text-info">
-                            <i class="fas fa-sync-alt"></i>
-                            <div class="number"><?= $total_peminjaman ?></div>
-                            <p>Peminjaman Aktif</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card mt-4">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">Selamat Datang di PinjamYuk!</h5>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Form Edit Barang</h5>
                 </div>
                 <div class="card-body">
-                    <p>PinjamYuk adalah platform peminjaman barang yang memudahkan Anda untuk meminjam berbagai peralatan yang Anda butuhkan. Dengan koleksi barang yang beragam dan proses peminjaman yang sederhana, kami hadir untuk memenuhi kebutuhan peralatan sehari-hari Anda.</p>
-                    <div class="d-flex mt-4">
-                        <a href="<?= site_url('barang') ?>" class="btn btn-primary me-2">
-                            <i class="fas fa-box-open me-1"></i> Lihat Barang
-                        </a>
-                        <a href="<?= site_url('about') ?>" class="btn btn-outline-secondary">
-                            <i class="fas fa-info-circle me-1"></i> Tentang Kami
-                        </a>
-                    </div>
+                    <form action="<?= site_url('barang/update/'.$barang->id) ?>" method="post">
+                        <input type="hidden" name="id" value="<?= $barang->id ?>">
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Nama Barang</label>
+                            <input type="text" class="form-control" name="nama_barang" 
+                                   value="<?= set_value('nama_barang', $barang->nama_barang) ?>" 
+                                   placeholder="Contoh: Laptop" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Jumlah</label>
+                            <input type="number" class="form-control" name="jumlah" 
+                                   value="<?= set_value('jumlah', $barang->jumlah) ?>" 
+                                   placeholder="Contoh: 5" min="1" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Keterangan</label>
+                            <textarea class="form-control" name="keterangan" 
+                                      placeholder="Contoh: Barang IT" rows="4" required><?= set_value('keterangan', $barang->keterangan) ?></textarea>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Simpan Perubahan
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

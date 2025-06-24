@@ -4,17 +4,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Login extends CI_Controller {
 
     function __construct() {
-        parent::__construct();		
+        parent::__construct();
         $this->load->model('M_login');
-        $this->load->helper('url'); 
         $this->load->library('session');
     }
 
-    function index() {
+    public function index() {
         $this->load->view('login');
     }
 
-    function masuk() {
+    public function masuk() {
         $username = $this->input->post('username');
         $password = $this->input->post('password');
 
@@ -23,24 +22,29 @@ class Login extends CI_Controller {
         if ($cek->num_rows() > 0) {
             $user = $cek->row();
             if (password_verify($password, $user->password)) {
-                $sess_data['username'] = $user->username;
-                $sess_data['status'] = "AezakmiHesoyamWhosyourdaddy";
+                $sess_data = [
+                    'username' => $user->username,
+                    'logged_in' => true,
+                    'user_id' => $user->id
+                ];
                 $this->session->set_userdata($sess_data);
 
-                redirect(base_url("dashboard"));
+                redirect('dashboard');
             } else {
-                echo "<script>alert('Password salah');window.location = '".base_url('Login')."';</script>";
+                $this->session->set_flashdata('error', 'Password salah');
+                redirect('login');
             }
         } else {
-            echo "<script>alert('Username tidak ditemukan');window.location = '".base_url('Login')."';</script>";
+            $this->session->set_flashdata('error', 'Username tidak ditemukan');
+            redirect('login');
         }
     }
 
-    function daftar() {
+    public function daftar() {
         $this->load->view('signup');
     }
 
-    function daftar_aksi() {
+    public function daftar_aksi() {
         $username = $this->input->post('username');
         $email = $this->input->post('email');
         $password = $this->input->post('password');
@@ -48,21 +52,23 @@ class Login extends CI_Controller {
         $cek = $this->M_login->cek_username($username);
 
         if ($cek->num_rows() > 0) {
-            echo "<script>alert('Username sudah terdaftar');window.location = '".base_url('Login/daftar')."';</script>";
+            $this->session->set_flashdata('error', 'Username sudah terdaftar');
+            redirect('login/daftar');
         } else {
-            $data = array(
+            $data = [
                 'username' => $username,
                 'email' => $email,
                 'password' => password_hash($password, PASSWORD_DEFAULT)
-            );
+            ];
 
             $this->M_login->tambah_user($data);
-            echo "<script>alert('Pendaftaran berhasil, silakan login');window.location = '".base_url('Login')."';</script>";
+            $this->session->set_flashdata('success', 'Pendaftaran berhasil, silakan login');
+            redirect('login');
         }
     }
 
-    function logout() {
+    public function logout() {
         $this->session->sess_destroy();
-        redirect(base_url('Login'));
+        redirect('login');
     }
 }
