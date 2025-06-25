@@ -243,20 +243,38 @@
                 </div>
             <?php endif; ?>
             
+            <?php if($this->input->get('q')): ?>
+                <div class="alert alert-info">
+                    Menampilkan hasil pencarian untuk: <strong><?= htmlspecialchars($this->input->get('q')) ?></strong>
+                    <a href="<?= site_url('barang') ?>" class="float-end">Tampilkan semua barang</a>
+                </div>
+            <?php endif; ?>
+            
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">Daftar Barang</h5>
-                    <div class="d-flex">
-                        <input type="text" class="form-control me-2" placeholder="Cari barang...">
-                        <button class="btn btn-outline-secondary">
+                    <form action="<?= site_url('barang') ?>" method="get" class="d-flex">
+                        <input type="text" name="q" class="form-control me-2" 
+                               placeholder="Cari barang..." 
+                               value="<?= htmlspecialchars($this->input->get('q')) ?>">
+                        <button type="submit" class="btn btn-outline-secondary me-2">
                             <i class="fas fa-search"></i>
                         </button>
-                    </div>
+                        <?php if($this->input->get('q')): ?>
+                            <a href="<?= site_url('barang') ?>" class="btn btn-outline-danger">
+                                <i class="fas fa-times"></i> Reset
+                            </a>
+                        <?php endif; ?>
+                    </form>
                 </div>
                 <div class="card-body">
                     <?php if(empty($barang)): ?>
                         <div class="alert alert-info">
-                            Tidak ada data barang.
+                            <?php if($this->input->get('q')): ?>
+                                Tidak ditemukan barang dengan kata kunci: <strong><?= htmlspecialchars($this->input->get('q')) ?></strong>
+                            <?php else: ?>
+                                Tidak ada data barang.
+                            <?php endif; ?>
                         </div>
                     <?php else: ?>
                         <div class="table-responsive">

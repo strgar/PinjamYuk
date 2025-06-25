@@ -41,6 +41,7 @@ class Barang_model extends CI_Model
         return $this->db->count_all($this->table);
     }
 
+    // Search method
     public function search($keyword)
     {
         $this->db->like('nama_barang', $keyword);
